@@ -4,11 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Public API</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/water.css@2/out/water.css'>
+    <title>Book Cover Shuffle</title>
 </head>
 
 <body>
-
+    <a href="index.html">
+        <h1>Book Cover Shuffle</h1>
+    </a>
+    <form action="get">
+        <input type="text" name="author-search" id="author-search" placeholder="Author">
+        <button type="submit">Search</button>
+    </form>
+    <div id="bookshelf"></div>
+    <script src="script.js"></script>
 </body>
 
 </html>
