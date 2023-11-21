@@ -1,0 +1,21 @@
+:root {
+  --bluegray: rgb(86, 83, 131);
+  --white: white;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+#choices span {
+  background-color: var(--bluegray);
+  border-radius: 0.5rem;
+  color: var(--white);
+  margin: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+}
