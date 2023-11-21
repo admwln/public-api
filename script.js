@@ -1,68 +1,131 @@
-const form = document.querySelector("form");
-const baseUrl = "https://openlibrary.org/search/authors.json?q=";
-let authorWorks;
-let authorName;
-let myBooks = [];
+const nouns = [
+  "book",
+  "time",
+  "girl",
+  "word",
+  "house",
+  "heart",
+  "money",
+  "water",
+  "music",
+  "light",
+  "chair",
+  "apple",
+  "cloud",
+  "dream",
+  "earth",
+  "smile",
+  "party",
+  "snake",
+  "flower",
+  "bread",
+  "stone",
+  "peace",
+  "space",
+  "ghost",
+  "queen",
+  "river",
+  "dream",
+  "brain",
+  "fruit",
+  "honey",
+  "tiger",
+  "lemon",
+  "piano",
+  "ocean",
+  "laugh",
+  "faith",
+  "sugar",
+  "beach",
+  "rover",
+  "mouse",
+  "dream",
+  "fairy",
+  "sword",
+  "grape",
+  "robot",
+  "ghost",
+  "cloud",
+  "shoes",
+  "horse",
+  "storm",
+  "chalk",
+  "watch",
+  "whale",
+  "night",
+  "beard",
+  "dream",
+  "music",
+  "space",
+  "soul",
+  "guide",
+  "dream",
+  "globe",
+  "happy",
+  "honor",
+  "dream",
+  "power",
+  "light",
+  "heart",
+  "peace",
+  "dream",
+  "beast",
+  "grace",
+  "storm",
+  "voice",
+  "fruit",
+  "glass",
+  "faith",
+  "dream",
+  "charm",
+  "child",
+  "stone",
+  "mouse",
+  "heart",
+  "dance",
+  "dream",
+  "flower",
+  "ocean",
+  "spark",
+  "beach",
+  "dream",
+  "smile",
+  "child",
+  "faith",
+  "music",
+  "dream",
+  "flame",
+  "cloud",
+  "night",
+  "dream",
+  "magic",
+  "angel",
+  "peace",
+  "dream",
+];
 
-form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  let authorKey;
-  //Search for author
-  const searchQuery = document.querySelector("#author-search").value;
+const newWordBtn = document.querySelector("#new-word");
+const baseUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/";
+newWordBtn.addEventListener("click", () => {
+  const randomWord = nouns[Math.floor(Math.random() * nouns.length)];
+  console.log(randomWord);
+  // Get definition of random word from Free Dictionary API
+  const getDefinition = async () => {
+    const response = await fetch(baseUrl + randomWord);
 
-  const searchAuthor = async () => {
-    const response = await fetch(baseUrl + searchQuery);
+    const results = await response.json();
+    const definitions = results[0].meanings;
+    console.log(definitions);
+    // Loop through definitions and display
+    //for (let i = 0; i < definitions.length; i++) {
+    const definition = definitions[0].definitions[0].definition;
+    const initalLetter = randomWord.charAt(0).toUpperCase();
+    const initialDisplay = document.querySelector("#initial");
+    initialDisplay.innerHTML = initalLetter;
+    const definitionDisplay = document.querySelector("#definition");
 
-    const authorSearchResult = await response.json();
-    authorKey = authorSearchResult.docs[0].key;
-    authorName = authorSearchResult.docs[0].name;
-    console.log(authorName);
-    console.log(authorKey);
-    getAuthorWorks(authorKey);
+    definitionDisplay.innerHTML = definition;
+    //}
   };
-
-  searchAuthor();
+  getDefinition();
 });
-
-// const authorsUrl = "https://openlibrary.org/authors/";
-const authorsUrl = "https://openlibrary.org/books/";
-
-const getAuthorWorks = async (authorKey) => {
-  //const response = await fetch(authorsUrl + authorKey + "/works.json");
-  const response = await fetch(authorsUrl + authorKey + ".json");
-
-  authorWorks = await response.json();
-  authorWorks = authorWorks.entries;
-  console.log(authorWorks);
-  // Loop through the covers of each work
-  for (let i = 0; i < authorWorks.length; i++) {
-    let myBook;
-    const covers = authorWorks[i].covers;
-    const title = authorWorks[i].title;
-    if (Array.isArray(covers)) {
-      myBook = {
-        authorKey: authorKey,
-        authorName: authorName,
-        bookTitle: title,
-        coverKey: covers[0],
-      };
-      myBooks.push(myBook);
-    }
-  }
-  // Loop tru 10 first books in myBooks and pass book key to populateBookshelf();
-  for (let i = 0; i < 10; i++) {
-    const book = myBooks[i];
-    populateBookshelf(book.coverKey);
-  }
-};
-
-// Get 20 covers from myBooks and display
-const shelf = document.querySelector("#bookshelf");
-const coversUrl = "https://covers.openlibrary.org/b/id/"; // + "-L.jpg"
-
-function populateBookshelf(bookKey) {
-  const myBookCover = document.createElement("img");
-  myBookCover.src = coversUrl + bookKey + "-L.jpg";
-  //console.log(myBookCover);
-  shelf.appendChild(myBookCover);
-}
