@@ -145,7 +145,6 @@ let nouns = [
   "silence",
   "majestic",
   "stimulus",
-  "stronger",
   "capture",
   "whisper",
   "champion",
@@ -221,30 +220,33 @@ let randomWord;
 
 // Generate new word on click
 newWordBtn.addEventListener("click", () => {
-  // Empty choice div
-  choiceContainer.innerHTML = "";
-  const randomIndex = Math.floor(Math.random() * nouns.length);
-  randomWord = nouns[randomIndex];
-  console.log(randomWord);
-  // Remove random word from nouns array (at position randomIndex, remove one item)
-  nouns.splice(randomIndex, 1);
   // Get definition of random word from Free Dictionary API
   const getDefinition = async () => {
+    // Empty choice div
+    choiceContainer.innerHTML = "";
+    const randomIndex = Math.floor(Math.random() * nouns.length);
+    randomWord = nouns[randomIndex];
+    console.log(randomWord);
+    // Remove random word from nouns array (at position randomIndex, remove one item)
+    nouns.splice(randomIndex, 1);
     const response = await fetch(baseUrl + randomWord);
     const results = await response.json();
     const definitions = results[0].meanings;
 
     // Save first definition to variable and display
     let definition = definitions[0].definitions[0].definition;
-    // Check if definition includes an explicit reference to first twho thirds of current word
+    // Check if definition includes an explicit reference to first two thirds of current word, if so kill function and re-call
     const beginningOfWord = randomWord.slice(
       0,
-      Math.round((-1 * randomWord.length) / 3)
+      Math.round((-1 * randomWord.length) / 2)
     );
 
-    if (definition.includes(randomWord.slice(0, beginningOfWord.length))) {
-      console.log("includes");
-      definition = definition.replace(new RegExp(beginningOfWord, "g"), "---");
+    if (definition.includes(beginningOfWord)) {
+      console.log("includes!!!");
+
+      // Recursive call to the function
+      getDefinition();
+      return;
     }
 
     const definitionDisplay = document.querySelector("#definition");
@@ -257,7 +259,7 @@ newWordBtn.addEventListener("click", () => {
     // Shuffle noun array
     shuffleArray(nouns);
     // Add first 9 strings to multipleChoices array
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 3; i++) {
       multipleChoices.push(nouns[i]);
     }
     // Shuffle multipleChoices
