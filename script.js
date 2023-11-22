@@ -235,7 +235,18 @@ newWordBtn.addEventListener("click", () => {
     const definitions = results[0].meanings;
 
     // Save first definition to variable and display
-    const definition = definitions[0].definitions[0].definition;
+    let definition = definitions[0].definitions[0].definition;
+    // Check if definition includes an explicit reference to first twho thirds of current word
+    const beginningOfWord = randomWord.slice(
+      0,
+      Math.round((-1 * randomWord.length) / 3)
+    );
+
+    if (definition.includes(randomWord.slice(0, beginningOfWord.length))) {
+      console.log("includes");
+      definition = definition.replace(new RegExp(beginningOfWord, "g"), "---");
+    }
+
     const definitionDisplay = document.querySelector("#definition");
     definitionDisplay.innerHTML = definition;
 
