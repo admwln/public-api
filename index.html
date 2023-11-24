@@ -13,9 +13,30 @@
     <a href="index.html">
         <h1>Word Game</h1>
     </a>
-    <button id="new-word">New word!</button>
-    <p id="definition"></p>
-    <div id="choices"></div>
+    <label for="word-length">Word length</label>
+    <select name="word-length" id="word-length">
+        <option value="4">Short</option>
+        <option selected value="7">Medium</option>
+        <option value="10">Long</option>
+    </select>
+    <button id="load-game">Load new game</button>
+    <button id="new-word">Next word!</button>
+    <div class="game-conatiner">
+        <div class="progress-indicator">
+            <div class="progress-square"></div>
+            <div class="progress-square"></div>
+            <div class="progress-square"></div>
+            <div class="progress-square"></div>
+            <div class="progress-square"></div>
+            <div class="progress-square"></div>
+            <div class="progress-square"></div>
+            <div class="progress-square"></div>
+            <div class="progress-square"></div>
+            <div class="progress-square"></div>
+        </div>
+        <p id="definition"></p>
+        <div id="choices"></div>
+    </div>
     <script src="script.js"></script>
 </body>
 

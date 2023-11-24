@@ -1,217 +1,23 @@
-// let nouns = [
-//   "book",
-//   "time",
-//   "girl",
-//   "word",
-//   "house",
-//   "heart",
-//   "money",
-//   "water",
-//   "music",
-//   "light",
-//   "chair",
-//   "apple",
-//   "cloud",
-//   "dream",
-//   "earth",
-//   "smile",
-//   "party",
-//   "snake",
-//   "flower",
-//   "bread",
-//   "stone",
-//   "peace",
-//   "space",
-//   "ghost",
-//   "queen",
-//   "river",
-//   "dream",
-//   "brain",
-//   "fruit",
-//   "honey",
-//   "tiger",
-//   "lemon",
-//   "piano",
-//   "ocean",
-//   "laugh",
-//   "faith",
-//   "sugar",
-//   "beach",
-//   "rover",
-//   "mouse",
-//   "dream",
-//   "fairy",
-//   "sword",
-//   "grape",
-//   "robot",
-//   "ghost",
-//   "cloud",
-//   "shoes",
-//   "horse",
-//   "storm",
-//   "chalk",
-//   "watch",
-//   "whale",
-//   "night",
-//   "beard",
-//   "dream",
-//   "music",
-//   "space",
-//   "soul",
-//   "guide",
-//   "dream",
-//   "globe",
-//   "happy",
-//   "honor",
-//   "dream",
-//   "power",
-//   "light",
-//   "heart",
-//   "peace",
-//   "dream",
-//   "beast",
-//   "grace",
-//   "storm",
-//   "voice",
-//   "fruit",
-//   "glass",
-//   "faith",
-//   "dream",
-//   "charm",
-//   "child",
-//   "stone",
-//   "mouse",
-//   "heart",
-//   "dance",
-//   "dream",
-//   "flower",
-//   "ocean",
-//   "spark",
-//   "beach",
-//   "dream",
-//   "smile",
-//   "child",
-//   "faith",
-//   "music",
-//   "dream",
-//   "flame",
-//   "cloud",
-//   "night",
-//   "dream",
-//   "magic",
-//   "angel",
-//   "peace",
-//   "dream",
-// ];
+//nouns = Array.from(new Set(nouns));
 
-let nouns = [
-  "library",
-  "justice",
-  "exhibit",
-  "freight",
-  "monarch",
-  "foreman",
-  "network",
-  "context",
-  "support",
-  "monster",
-  "victory",
-  "journey",
-  "paradox",
-  "tribute",
-  "justice",
-  "foreman",
-  "keyword",
-  "insight",
-  "monarch",
-  "freight",
-  "journal",
-  "diamond",
-  "control",
-  "champion",
-  "element",
-  "harvest",
-  "captain",
-  "command",
-  "fantasy",
-  "whisper",
-  "freight",
-  "partner",
-  "vagabond",
-  "mystery",
-  "tribute",
-  "organize",
-  "forever",
-  "silence",
-  "majestic",
-  "stimulus",
-  "capture",
-  "whisper",
-  "champion",
-  "perfect",
-  "element",
-  "forgive",
-  "flexible",
-  "disaster",
-  "fantasy",
-  "original",
-  "division",
-  "journey",
-  "harvest",
-  "creative",
-  "organize",
-  "freight",
-  "diamond",
-  "stimulus",
-  "tribute",
-  "paradox",
-  "strategy",
-  "monarch",
-  "captain",
-  "majestic",
-  "perfect",
-  "whisper",
-  "journey",
-  "organize",
-  "stimulus",
-  "flexible",
-  "silence",
-  "forever",
-  "champion",
-  "original",
-  "element",
-  "strategy",
-  "freight",
-  "paradox",
-  "tribute",
-  "diamond",
-  "harvest",
-  "justice",
-  "captain",
-  "monster",
-  "majestic",
-  "perfect",
-  "network",
-  "context",
-  "champion",
-  "element",
-  "strategy",
-  "freight",
-  "original",
-  "captain",
-  "monster",
-  "tribute",
-  "majestic",
-  "paradox",
-  "journey",
-  "justice",
-  "diamond",
-  "foreman",
-  "organize",
-  "stimulus",
-];
-
-nouns = Array.from(new Set(nouns));
+//Get words from Random word api
+// https://random-word-api.herokuapp.com/word?number=1&lang=en&length=6
+const newGameBtn = document.querySelector("#load-game");
+const randomWordUrl = "https://random-word-api.herokuapp.com/word?lang=en";
+//Get words on click
+newGameBtn.addEventListener("click", () => {
+  const wordLength = document.querySelector("#word-length").value;
+  const getWords = async () => {
+    const response = await fetch(
+      randomWordUrl + "&number=50&length=" + wordLength
+    );
+    const results = await response.json();
+    nouns = results;
+    console.log(nouns);
+  };
+  getWords();
+  startGame();
+});
 
 const newWordBtn = document.querySelector("#new-word");
 const baseUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/";
@@ -219,7 +25,7 @@ const choiceContainer = document.querySelector("#choices");
 let randomWord;
 
 // Generate new word on click
-newWordBtn.addEventListener("click", () => {
+function startGame() {
   // Get definition of random word from Free Dictionary API
   const getDefinition = async () => {
     // Empty choice div
@@ -231,19 +37,66 @@ newWordBtn.addEventListener("click", () => {
     nouns.splice(randomIndex, 1);
     const response = await fetch(baseUrl + randomWord);
     const results = await response.json();
+    //Catch error if no definition is found
+    if (results.title === "No Definitions Found") {
+      console.log("No definition found, re-calling function");
+      // Recursive call to the function
+      getDefinition();
+      return;
+    }
+
+    // Get dictionary form of word
+    const sourceUrls = results[0].sourceUrls;
+
+    // Compare strings in sourceUrls array to find the shortest one
+    let shortestUrl = sourceUrls.reduce((a, b) =>
+      a.length <= b.length ? a : b
+    );
+
+    let dictionaryForm = shortestUrl.split("/");
+    dictionaryForm = dictionaryForm[dictionaryForm.length - 1];
+    console.log(dictionaryForm);
+    randomWord = dictionaryForm;
+
     const definitions = results[0].meanings;
 
     // Save first definition to variable and display
     let definition = definitions[0].definitions[0].definition;
-    // Check if definition includes an explicit reference to first two thirds of current word, if so kill function and re-call
-    const beginningOfWord = randomWord.slice(
-      0,
-      Math.round((-1 * randomWord.length) / 2)
-    );
 
-    if (definition.includes(beginningOfWord)) {
-      console.log("includes!!!");
+    // Save first 2/3 of randomWord to variable
+    let beginningOfWord;
+    if (randomWord.length > 4) {
+      beginningOfWord = randomWord.slice(
+        0,
+        Math.round((-1 * randomWord.length) / 2)
+      );
+      console.log("Beginning of word: " + beginningOfWord);
+      // If current word is 4 characters or less, use the whole word
+    } else {
+      beginningOfWord = randomWord;
+      console.log("Beginning of word: " + beginningOfWord);
+    }
 
+    // Save last 2/3 of randomWord to variable
+    let endOfWord;
+    if (randomWord.length > 4) {
+      endOfWord = randomWord.slice(
+        Math.round((-1 * randomWord.length) / 2),
+        randomWord.length
+      );
+      console.log("End of word: " + endOfWord);
+      // If current word is 4 characters or less, use the whole word
+    } else {
+      endOfWord = randomWord;
+      console.log("End of word: " + endOfWord);
+    }
+
+    if (
+      definition.includes(beginningOfWord) ||
+      definition.includes(endOfWord)
+    ) {
+      console.log("Flagged definition: '" + definition + "'");
+      console.log("Definition includes beginning of word, re-calling function");
       // Recursive call to the function
       getDefinition();
       return;
@@ -252,7 +105,7 @@ newWordBtn.addEventListener("click", () => {
     const definitionDisplay = document.querySelector("#definition");
     definitionDisplay.innerHTML = definition;
 
-    // Generate array with ten words, including our current randomWord
+    // Generate array with four words, including our current randomWord
     let multipleChoices = [];
     // Push current randomWord to array
     multipleChoices.push(randomWord);
@@ -276,6 +129,10 @@ newWordBtn.addEventListener("click", () => {
     getChoiceSpans();
   };
   getDefinition();
+}
+
+newWordBtn.addEventListener("click", () => {
+  startGame();
 });
 
 function shuffleArray(array) {

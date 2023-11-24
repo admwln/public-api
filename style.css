@@ -19,3 +19,24 @@ body {
   padding: 0.5rem;
   cursor: pointer;
 }
+
+/* Progress -------------------------------------------------- */
+.progress-indicator {
+  display: flex;
+  flex: row;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+}
+
+.progress-square {
+  background-color: transparent;
+  border-radius: 0.5rem;
+  border: 2px solid var(--bluegray);
+  color: var(--white);
+  margin: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  width: 1rem;
+  height: 1rem;
+}
