@@ -1,6 +1,8 @@
 :root {
   --bluegray: rgb(86, 83, 131);
   --white: white;
+  --green: green;
+  --red: red;
 }
 
 * {
@@ -11,13 +13,21 @@ body {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-#choices span {
+#choices button {
   background-color: var(--bluegray);
+  border: none;
+  outline: none;
   border-radius: 0.5rem;
   color: var(--white);
   margin: 0.5rem;
   padding: 0.5rem;
   cursor: pointer;
+}
+
+.choice:disabled {
+  background-color: var(--bluegray);
+  cursor: default;
+  opacity: 0.25;
 }
 
 /* Progress -------------------------------------------------- */
@@ -39,4 +49,16 @@ body {
   cursor: pointer;
   width: 1rem;
   height: 1rem;
+}
+
+.progress-square.correct {
+  background-color: var(--green);
+}
+
+.progress-square.incorrect {
+  background-color: var(--red);
+}
+
+.hidden {
+  display: none;
 }
