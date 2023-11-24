@@ -3,13 +3,12 @@ let nouns = [];
 
 //Get words from Random word api
 // https://random-word-api.herokuapp.com/word?number=1&lang=en&length=6
-const newGameBtn = document.querySelector("#load-game");
+const loadGameBtn = document.querySelector("#load-game");
 const randomWordUrl = "https://random-word-api.herokuapp.com/word?lang=en";
 //Get words on click
-newGameBtn.addEventListener("click", () => {
+loadGameBtn.addEventListener("click", () => {
   // Show game container
   const gameContainer = document.querySelector(".game-container");
-  console.log(gameContainer);
   gameContainer.classList.remove("hidden");
 
   const wordLength = document.querySelector("#word-length").value;
@@ -20,9 +19,16 @@ newGameBtn.addEventListener("click", () => {
     const results = await response.json();
     nouns = results;
     console.log(nouns);
-    startGame();
+    nextWord();
   };
   getWords();
+
+  // Reset progress squares
+  const progressSquares = document.querySelectorAll(".progress-square");
+  for (let i = 0; i < progressSquares.length; i++) {
+    progressSquares[i].classList.remove("correct");
+    progressSquares[i].classList.remove("incorrect");
+  }
 });
 
 const nextWordBtn = document.querySelector("#next-word");
@@ -32,9 +38,14 @@ let randomWord;
 let wordCount = 0;
 
 // Generate new word on click
-function startGame() {
+function nextWord() {
+  // Disable #load-game button until game is over
+  const loadGameBtn = document.querySelector("#load-game");
+  loadGameBtn.disabled = true;
+
   // Disable #next-word button until user has chosen an answer
   nextWordBtn.disabled = true;
+
   // Enable choice buttons
   const choiceButtons = document.querySelectorAll(".choice");
   for (let j = 0; j < choiceButtons.length; j++) {
@@ -178,7 +189,7 @@ function startGame() {
 }
 
 nextWordBtn.addEventListener("click", () => {
-  startGame();
+  nextWord();
 });
 
 function shuffleArray(array) {
@@ -219,6 +230,11 @@ function getChoiceButtons() {
         alert("Game over!");
         wordCount = 0;
         console.log("Word count: " + wordCount);
+        // Disable #next-word button at end of game
+        nextWordBtn.disabled = true;
+        // Enable #load-game button at end of game
+        const loadGameBtn = document.querySelector("#load-game");
+        loadGameBtn.disabled = false;
       }
     };
   }
