@@ -133,7 +133,7 @@ function nextWord() {
     if (randomWord.length > 3) {
       beginningOfWord = randomWord.slice(
         0,
-        Math.round(3 + randomWord.length * 0.15)
+        Math.round(3 + randomWord.length * 0.1)
       );
       console.log("Beginning of word: " + beginningOfWord);
       // If current word is 4 characters or less, use the whole word
@@ -145,7 +145,7 @@ function nextWord() {
     // Save last 4 characters of randomWord to variable
     let endOfWord;
     if (randomWord.length > 3) {
-      endOfWord = randomWord.slice(-Math.round(3 + randomWord.length * 0.15));
+      endOfWord = randomWord.slice(-Math.round(3 + randomWord.length * 0.1));
       console.log("End of word: " + endOfWord);
       // If current word is 4 characters or less, use the whole word
     } else {
@@ -153,9 +153,12 @@ function nextWord() {
       console.log("End of word: " + endOfWord);
     }
 
+    // Make definition lowercase
+    let definitionLower = definition.toLowerCase();
+
     if (
-      definition.includes(beginningOfWord) ||
-      definition.includes(endOfWord)
+      definitionLower.includes(beginningOfWord) ||
+      definitionLower.includes(endOfWord)
     ) {
       console.log("Flagged definition: '" + definition + "'");
       console.log("Definition includes beginning of word, re-calling function");
@@ -164,8 +167,19 @@ function nextWord() {
       return;
     }
 
+    // Remove previous definition-div
+    const definitionDivs = document.querySelectorAll(".definition-div");
+    for (let i = 0; i < definitionDivs.length; i++) {
+      definitionDivs[i].remove();
+    }
+
+    // Display definition in html
+    const definitionDiv = document.createElement("div");
+    definitionDiv.classList.add("definition-div");
+    definitionDiv.innerHTML = definition;
+
     const definitionDisplay = document.querySelector("#definition");
-    definitionDisplay.innerHTML = definition;
+    definitionDisplay.appendChild(definitionDiv);
 
     // Generate array with four words, including our current randomWord
     let multipleChoices = [];

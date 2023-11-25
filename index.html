@@ -15,17 +15,19 @@
             <h1>Definitely</h1>
         </a>
         <div class="init">
-            <label for="difficulty">Difficulty</label>
-            <select name="difficulty" id="difficulty">
-                <option value="4">Piece of Cake</option>
-                <option selected value="7">Let's Rock</option>
-                <option value="10">Come Get Some</option>
-            </select>
             <button id="load-game">Load new game</button>
+            <div class="difficulty-container">
+                <label for="difficulty">Difficulty</label>
+                <select name="difficulty" id="difficulty">
+                    <option value="4">Piece of Cake</option>
+                    <option selected value="7">Let's Rock</option>
+                    <option value="10">Come Get Some</option>
+                </select>
+            </div>
         </div>
-        <button id="next-word" disabled>Next word!</button>
     </header>
     <div class="game-container hidden">
+        <button id="next-word" disabled>Next word</button>
         <div class="progress-indicator">
             <div class="progress-square"></div>
             <div class="progress-square"></div>
@@ -38,7 +40,8 @@
             <div class="progress-square"></div>
             <div class="progress-square"></div>
         </div>
-        <p id="definition"></p>
+        <div id="definition">
+        </div>
         <div id="choices"></div>
     </div>
     <script src="script.js"></script>

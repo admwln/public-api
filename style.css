@@ -1,9 +1,10 @@
 :root {
-  --black: #000;
+  --black: #402a01;
   --bluegray: rgb(86, 83, 131);
-  --white: white;
-  --green: #04aa6d;
-  --red: red;
+  --green: #a0b10d;
+  --red: #ff4b09;
+  --white: #f2edd0;
+  --yellow: #fddd00;
 }
 
 * {
@@ -12,18 +13,15 @@
 
 body {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  background-color: var(--white);
   padding: 4vw 2vw;
   margin: 0;
   font-size: 16px;
+  overflow: hidden;
 }
 header {
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between;
-  align-items: center;
-  background-color: var(--bluegray);
-  color: var(--white);
-  padding: 0.5rem; */
 }
 a {
   color: var(--black);
@@ -42,21 +40,29 @@ h1 {
   display: none;
 }
 
+.init {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
 .game-container {
   display: flex;
   flex-direction: column;
-  /* justify-content: center;
-  align-items: center; */
-  /* width: 100%; */
 }
 
 #choices {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  align-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  column-gap: 1rem;
 }
 
 #choices button {
-  background-color: var(--green);
+  background-color: var(--black);
+  transition: opacity 250ms ease-in;
 }
 button {
   color: var(--white);
@@ -69,32 +75,49 @@ button {
   font-size: 2rem;
 }
 
-header .init {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-
 header select {
+  background-color: transparent;
   font-size: 1.5rem;
   padding: 0.5rem;
-  margin: 0.5rem;
+  margin: 0.5rem 0;
   border-radius: 0.5rem;
-  border: 2px solid var(--black);
-  outline: none;
+  /* border: 2px solid var(--black); */
+  border: none;
   width: fit-content;
 }
 
-header button {
-  width: 100%;
-  background-color: var(--bluegray);
-  margin: 0.5rem 0;
+header select:focus {
+  outline: none;
 }
 
-header button:disabled {
+.difficulty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+}
+label {
+  position: absolute;
+  top: -0.5rem;
+  left: -2rem;
+  transform: rotate(-25deg);
+  font-size: 1rem;
+  padding: 0.25rem;
+  margin: 0.5rem 0;
+  background-color: var(--yellow);
+  z-index: -10;
+}
+
+button#next-word,
+button#load-game {
+  width: fit-content;
+  background-color: var(--black);
+  margin: 0.5rem auto;
+}
+button#next-word:disabled,
+button#load-game:disabled {
   background-color: gray;
-  opacity: 0.5;
+  opacity: 0.25;
 }
 
 .choice:disabled {
@@ -114,7 +137,7 @@ header button:disabled {
 .progress-square {
   background-color: transparent;
   border-radius: 0.5rem;
-  border: 2px solid var(--bluegray);
+  border: 2px solid var(--black);
   margin: 0.25rem;
   padding: 0.25rem;
   cursor: pointer;
@@ -124,18 +147,49 @@ header button:disabled {
 
 .progress-square.correct {
   background-color: var(--green);
+  border: none;
 }
 
 .progress-square.incorrect {
   background-color: var(--red);
+  border: none;
 }
 
 .hidden {
   display: none;
 }
 
-@media (min-width: 500px) {
+/* Definition -------------------------------------------------- */
+#definition {
+  padding: 1rem;
+  margin: 0 1rem;
+  border-bottom: 2px solid var(--black);
+  position: relative;
+}
+
+/* Media Queries -------------------------------------------------- */
+@media (min-width: 710px) {
+  body {
+    padding: 2vw 15vw;
+  }
+}
+@media (min-width: 850px) {
+  body {
+    padding: 2vw 20vw;
+  }
+}
+
+@media (min-width: 1000px) {
   body {
     padding: 2vw 25vw;
+  }
+
+  h1 {
+    font-size: 5rem;
+  }
+
+  .progress-square {
+    width: 2vw;
+    height: 2vw;
   }
 }
