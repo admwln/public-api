@@ -1,7 +1,8 @@
 :root {
+  --black: #000;
   --bluegray: rgb(86, 83, 131);
   --white: white;
-  --green: green;
+  --green: #04aa6d;
   --red: red;
 }
 
@@ -11,21 +12,92 @@
 
 body {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  padding: 4vw 2vw;
+  margin: 0;
+  font-size: 16px;
+}
+header {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-between;
+  align-items: center;
+  background-color: var(--bluegray);
+  color: var(--white);
+  padding: 0.5rem; */
+}
+a {
+  color: var(--black);
+  text-decoration: none;
+}
+
+h1 {
+  text-align: center;
+  font-size: 3rem;
+  font-weight: 900;
+  margin: 0;
+  letter-spacing: -0.3rem;
+}
+
+.init.hidden {
+  display: none;
+}
+
+.game-container {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center;
+  align-items: center; */
+  /* width: 100%; */
+}
+
+#choices {
+  display: flex;
+  flex-direction: column;
 }
 
 #choices button {
-  background-color: var(--bluegray);
+  background-color: var(--green);
+}
+button {
+  color: var(--white);
   border: none;
   outline: none;
   border-radius: 0.5rem;
-  color: var(--white);
-  margin: 0.5rem;
+  margin: 0.5rem 0;
   padding: 0.5rem;
   cursor: pointer;
+  font-size: 2rem;
+}
+
+header .init {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+header select {
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  margin: 0.5rem;
+  border-radius: 0.5rem;
+  border: 2px solid var(--black);
+  outline: none;
+  width: fit-content;
+}
+
+header button {
+  width: 100%;
+  background-color: var(--bluegray);
+  margin: 0.5rem 0;
+}
+
+header button:disabled {
+  background-color: gray;
+  opacity: 0.5;
 }
 
 .choice:disabled {
-  background-color: var(--bluegray);
   cursor: default;
   opacity: 0.25;
 }
@@ -36,19 +108,18 @@ body {
   flex: row;
   justify-content: center;
   align-items: center;
-  margin: 1rem;
+  margin: 12px 0;
 }
 
 .progress-square {
   background-color: transparent;
   border-radius: 0.5rem;
   border: 2px solid var(--bluegray);
-  color: var(--white);
-  margin: 0.5rem;
-  padding: 0.5rem;
+  margin: 0.25rem;
+  padding: 0.25rem;
   cursor: pointer;
-  width: 1rem;
-  height: 1rem;
+  width: 5vw;
+  height: 5vw;
 }
 
 .progress-square.correct {
@@ -61,4 +132,10 @@ body {
 
 .hidden {
   display: none;
+}
+
+@media (min-width: 500px) {
+  body {
+    padding: 2vw 25vw;
+  }
 }

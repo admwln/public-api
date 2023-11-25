@@ -7,11 +7,20 @@ const loadGameBtn = document.querySelector("#load-game");
 const randomWordUrl = "https://random-word-api.herokuapp.com/word?lang=en";
 //Get words on click
 loadGameBtn.addEventListener("click", () => {
+  // Disable #load-game button until game is over
+  const loadGameBtn = document.querySelector("#load-game");
+  loadGameBtn.disabled = true;
+
+  // Hide init container
+  const initContainer = document.querySelector(".init");
+  initContainer.classList.add("hidden");
+  console.log("Init container hidden: " + initContainer);
+
   // Show game container
   const gameContainer = document.querySelector(".game-container");
   gameContainer.classList.remove("hidden");
 
-  const wordLength = document.querySelector("#word-length").value;
+  const wordLength = document.querySelector("#difficulty").value;
   const getWords = async () => {
     const response = await fetch(
       randomWordUrl + "&number=50&length=" + wordLength
@@ -39,10 +48,6 @@ let wordCount = 0;
 
 // Generate new word on click
 function nextWord() {
-  // Disable #load-game button until game is over
-  const loadGameBtn = document.querySelector("#load-game");
-  loadGameBtn.disabled = true;
-
   // Disable #next-word button until user has chosen an answer
   nextWordBtn.disabled = true;
 
@@ -235,6 +240,9 @@ function getChoiceButtons() {
         // Enable #load-game button at end of game
         const loadGameBtn = document.querySelector("#load-game");
         loadGameBtn.disabled = false;
+        // Display init container at end of game
+        const initContainer = document.querySelector(".init");
+        initContainer.classList.remove("hidden");
       }
     };
   }

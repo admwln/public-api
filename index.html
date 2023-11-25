@@ -6,21 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <!-- <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/water.css@2/out/water.css'> -->
-    <title>Word Game</title>
+    <title>Definitely</title>
 </head>
 
 <body>
-    <a href="index.html">
-        <h1>Word Game</h1>
-    </a>
-    <label for="word-length">Word length</label>
-    <select name="word-length" id="word-length">
-        <option value="4">Short</option>
-        <option selected value="7">Medium</option>
-        <option value="10">Long</option>
-    </select>
-    <button id="load-game">Load new game</button>
-    <button id="next-word">Next word!</button>
+    <header>
+        <a href="index.html">
+            <h1>Definitely</h1>
+        </a>
+        <div class="init">
+            <label for="difficulty">Difficulty</label>
+            <select name="difficulty" id="difficulty">
+                <option value="4">Piece of Cake</option>
+                <option selected value="7">Let's Rock</option>
+                <option value="10">Come Get Some</option>
+            </select>
+            <button id="load-game">Load new game</button>
+        </div>
+        <button id="next-word" disabled>Next word!</button>
+    </header>
     <div class="game-container hidden">
         <div class="progress-indicator">
             <div class="progress-square"></div>
