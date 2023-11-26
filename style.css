@@ -16,7 +16,7 @@
 body {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   background-color: var(--white);
-  padding: 4vw 2vw;
+  padding: 2vw;
   margin: 0;
 }
 header {
@@ -125,7 +125,7 @@ button#load-game:disabled {
 #choices .choice.incorrect-clicked {
   background-color: var(--red);
   cursor: default;
-  opacity: 0.5;
+  opacity: 0.25;
 }
 
 #choices .choice.correct-reveal {
@@ -209,10 +209,11 @@ button#load-game:disabled {
   background-color: var(--gray-transparent); /* Gray w/ opacity */
 }
 
+/* Modal Content -------------------------------------------------- */
 /* Modal Content/Box */
 .modal-content {
   background-color: var(--white);
-  margin: 0.5vw 2vw;
+  margin: 2vw 2vw;
   padding: 1vw 2rem;
   /* border: 1px solid var(--gray); */
   border-radius: 0.5rem;
@@ -234,7 +235,6 @@ button#load-game:disabled {
   cursor: pointer;
 }
 
-/* Modal Content -------------------------------------------------- */
 .word-heading {
   font-size: 1.25rem;
   font-weight: bold;
@@ -263,6 +263,7 @@ button#load-game:disabled {
   font-size: 0.6rem;
   margin: 0.1rem 0;
 }
+
 /* Media Queries -------------------------------------------------- */
 
 @media screen and (max-width: 500px) {

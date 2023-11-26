@@ -78,6 +78,7 @@ function nextWord() {
     if (
       randomWord.slice(-1) === "s" &&
       randomWord.slice(-2) !== "ss" &&
+      randomWord.slice(-2) !== "us" &&
       randomWord.slice(-3) !== "ous" &&
       randomWord.slice(-4) !== "snes"
     ) {
@@ -363,47 +364,56 @@ function populateModal(myWord) {
     modal.style.display = "none";
   });
 
-  // Get word from myWord
-  const word = myWord[0].word;
-  console.log("Word: " + word);
+  // Get sub-word from myWord
+  for (let k = 0; k < myWord.length; k++) {
+    // Get word from myWord
+    const word = myWord[k].word;
+    console.log("Word: " + word);
 
-  // Print word and phonetic to modal
-  const wordHeading = document.createElement("h2");
-  wordHeading.classList.add("word-heading");
-  wordHeading.innerHTML = word;
-  modalContent.appendChild(wordHeading);
+    // Print word and phonetic to modal
+    const wordHeading = document.createElement("h2");
+    wordHeading.classList.add("word-heading");
+    wordHeading.innerHTML = word;
+    modalContent.appendChild(wordHeading);
 
-  // Get meanings from myWord
-  const meanings = myWord[0].meanings;
+    // Add sub-word number to wordHeading
+    const subWord = document.createElement("sup");
+    subWord.classList.add("sub-word-number");
+    subWord.innerHTML = k + 1;
+    wordHeading.appendChild(subWord);
 
-  // Loop through meanings array and create divs for each meaning
-  for (let i = 0; i < meanings.length; i++) {
-    const meaningDiv = document.createElement("div");
-    meaningDiv.classList.add("meaning-div");
-    modalContent.appendChild(meaningDiv);
+    // Get meanings from myWord
+    const meanings = myWord[k].meanings;
 
-    // Get part of speech from meanings
-    const partOfSpeech = meanings[i].partOfSpeech;
-    // Print part of speech to modal
-    const partOfSpeechDiv = document.createElement("div");
-    partOfSpeechDiv.classList.add("part-of-speech");
-    partOfSpeechDiv.innerHTML = partOfSpeech;
-    meaningDiv.appendChild(partOfSpeechDiv);
+    // Loop through meanings array and create divs for each meaning
+    for (let i = 0; i < meanings.length; i++) {
+      const meaningDiv = document.createElement("div");
+      meaningDiv.classList.add("meaning-div");
+      modalContent.appendChild(meaningDiv);
 
-    // Create ul for definitions
-    const definitionUl = document.createElement("ul");
-    definitionUl.classList.add("definition-ul");
-    meaningDiv.appendChild(definitionUl);
+      // Get part of speech from meanings
+      const partOfSpeech = meanings[i].partOfSpeech;
+      // Print part of speech to modal
+      const partOfSpeechDiv = document.createElement("div");
+      partOfSpeechDiv.classList.add("part-of-speech");
+      partOfSpeechDiv.innerHTML = partOfSpeech;
+      meaningDiv.appendChild(partOfSpeechDiv);
 
-    // Get definitions from meanings
-    const definitions = meanings[i].definitions;
+      // Create ul for definitions
+      const definitionUl = document.createElement("ul");
+      definitionUl.classList.add("definition-ul");
+      meaningDiv.appendChild(definitionUl);
 
-    // Print definitions to modal
-    for (let j = 0; j < definitions.length; j++) {
-      const definitionLi = document.createElement("li");
-      definitionLi.classList.add("definition-li");
-      definitionLi.innerText = definitions[j].definition;
-      definitionUl.appendChild(definitionLi);
+      // Get definitions from meanings
+      const definitions = meanings[i].definitions;
+
+      // Print definitions to modal
+      for (let j = 0; j < definitions.length; j++) {
+        const definitionLi = document.createElement("li");
+        definitionLi.classList.add("definition-li");
+        definitionLi.innerText = definitions[j].definition;
+        definitionUl.appendChild(definitionLi);
+      }
     }
   }
 }
