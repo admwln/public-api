@@ -23,7 +23,7 @@ loadGameBtn.addEventListener("click", () => {
   const wordLength = document.querySelector("#difficulty").value;
   const getWords = async () => {
     const response = await fetch(
-      randomWordUrl + "&number=50&length=" + wordLength
+      randomWordUrl + "&number=100&length=" + wordLength
     );
     const results = await response.json();
     nouns = results;
@@ -108,8 +108,6 @@ function nextWord() {
       return;
     }
 
-    populateModal(currentWordJson);
-
     // Get dictionary form of word
     const sourceUrls = results[0].sourceUrls;
     // console.log("source urls: " + sourceUrls);
@@ -124,7 +122,16 @@ function nextWord() {
     let dictionaryForm = shortestUrl.split("/");
     dictionaryForm = dictionaryForm[dictionaryForm.length - 1];
     console.log("Dictionary form: " + dictionaryForm);
-    randomWord = dictionaryForm;
+    // Check if current randomWord is not the same as dictionaryForm
+    if (randomWord !== dictionaryForm) {
+      console.log("Random word is not the same as dictionary form");
+      // Change randomWord to dictionaryForm
+      randomWord = dictionaryForm;
+
+      // Recursive call to the function
+      getDefinition();
+      return;
+    }
 
     // Get definitions from results
     const definitions = results[0].meanings;
@@ -279,14 +286,18 @@ function getChoiceButtons() {
       // Make look-up button clickable
       const lookUp = document.querySelector(".look-up");
       lookUp.addEventListener("click", (event) => {
+        // Get clicked answer
         const clickedAnswer = event.target.parentNode.firstChild.textContent
           .trim()
           .replace(/\s+/g, " ");
         console.log("Clicked answer: " + clickedAnswer);
+
+        // Populate modal with word and definition
+        populateModal(currentWordJson);
         // Open modal
         const modal = document.querySelector("#myModal");
-
         modal.style.display = "block";
+
         // When the user clicks anywhere outside of the modal, close it
         window.addEventListener("click", (event) => {
           if (event.target == modal) {
@@ -339,12 +350,13 @@ function populateModal(myWord) {
   modalContent.innerHTML = "";
 
   // Get the <span> element that closes the modal
-  const span = document.querySelector(".close");
-  // // Create a <span> element and add the class "close" to it
-  // const span = document.createElement("span");
-  // span.classList.add("close");
-  // span.innerHTML = "&times;";
-  // modalContent.appendChild(span);
+  //const span = document.querySelector(".close");
+
+  // Create span element that closes the modal
+  const span = document.createElement("span");
+  span.classList.add("close");
+  span.innerHTML = "&times;";
+  modalContent.appendChild(span);
 
   // When the user clicks on <span> (x), close the modal
   span.addEventListener("click", (event) => {
@@ -356,39 +368,42 @@ function populateModal(myWord) {
   console.log("Word: " + word);
 
   // Print word and phonetic to modal
-  const wordDiv = document.createElement("div");
-  wordDiv.classList.add("word-div");
-  wordDiv.innerHTML = word;
-  modalContent.appendChild(wordDiv);
+  const wordHeading = document.createElement("h2");
+  wordHeading.classList.add("word-heading");
+  wordHeading.innerHTML = word;
+  modalContent.appendChild(wordHeading);
 
   // Get meanings from myWord
   const meanings = myWord[0].meanings;
-  console.log(meanings);
 
   // Loop through meanings array and create divs for each meaning
-  // for (let i = 0; i < meanings.length; i++) {
-  //   const meaningDiv = document.createElement("div");
-  //   meaningDiv.classList.add("meaning-div");
-  //   modalContent.appendChild(meaningDiv);
+  for (let i = 0; i < meanings.length; i++) {
+    const meaningDiv = document.createElement("div");
+    meaningDiv.classList.add("meaning-div");
+    modalContent.appendChild(meaningDiv);
 
-  //   // Get part of speech from meanings
-  //   const partOfSpeech = meanings[i].partOfSpeech;
-  //   console.log("Part of speech: " + partOfSpeech);
-  //   // Print part of speech to modal
-  //   const partOfSpeechDiv = document.createElement("div");
-  //   partOfSpeechDiv.classList.add("part-of-speech-div");
-  //   partOfSpeechDiv.innerHTML = partOfSpeech;
-  //   meaningDiv.appendChild(partOfSpeechDiv);
+    // Get part of speech from meanings
+    const partOfSpeech = meanings[i].partOfSpeech;
+    // Print part of speech to modal
+    const partOfSpeechDiv = document.createElement("div");
+    partOfSpeechDiv.classList.add("part-of-speech");
+    partOfSpeechDiv.innerHTML = partOfSpeech;
+    meaningDiv.appendChild(partOfSpeechDiv);
 
-  //   // Get definitions from meanings
-  //   const definitions = meanings[i].definition;
-  //   console.log(definitions);
-  //   // Print definitions to modal
-  //   for (let j = 0; j < definitions.length; j++) {
-  //     // const definitionDiv = document.createElement("div");
-  //     // definitionDiv.classList.add("definition-div");
-  //     // definitionDiv.innerHTML = definitions[j].definition;
-  //     // meaningDiv.appendChild(definitionDiv);
-  //   }
-  // }
+    // Create ul for definitions
+    const definitionUl = document.createElement("ul");
+    definitionUl.classList.add("definition-ul");
+    meaningDiv.appendChild(definitionUl);
+
+    // Get definitions from meanings
+    const definitions = meanings[i].definitions;
+
+    // Print definitions to modal
+    for (let j = 0; j < definitions.length; j++) {
+      const definitionLi = document.createElement("li");
+      definitionLi.classList.add("definition-li");
+      definitionLi.innerText = definitions[j].definition;
+      definitionUl.appendChild(definitionLi);
+    }
+  }
 }

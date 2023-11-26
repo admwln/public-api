@@ -1,6 +1,7 @@
 :root {
   --black: #402a01;
   --gray: #7f7e7c;
+  --gray-transparent: #7f7e7cbf;
   --green: #a0b10d;
   --red: #ff4b09;
   --white: #f2edd0;
@@ -204,26 +205,26 @@ button#load-game:disabled {
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  background-color: var(--gray); /* Fallback color */
+  background-color: var(--gray-transparent); /* Gray w/ opacity */
 }
 
 /* Modal Content/Box */
 .modal-content {
   background-color: var(--white);
-  margin: 2vw;
-  padding: 2rem;
-  border: 1px solid #888;
-  height: 90%;
+  margin: 0.5vw 2vw;
+  padding: 1vw 2rem;
+  /* border: 1px solid var(--gray); */
   border-radius: 0.5rem;
 }
 
 /* The Close Button */
 .close {
-  color: #aaa;
   float: right;
-  font-size: 28px;
+  color: var(--gray);
+  font-size: 1rem;
   font-weight: bold;
+  transform: translate(1rem, 0.05rem);
 }
 
 .close:hover,
@@ -234,6 +235,12 @@ button#load-game:disabled {
 }
 
 /* Modal Content -------------------------------------------------- */
+.word-heading {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin: 0.5rem 0;
+}
+
 .meaning-div {
   display: flex;
   flex-direction: column;
@@ -242,6 +249,20 @@ button#load-game:disabled {
   font-size: 0.5rem;
 }
 
+.modal ul {
+  padding: 0;
+  margin: 0;
+}
+
+.modal li {
+  margin: 0.25rem 0;
+}
+
+.part-of-speech {
+  font-weight: bold;
+  font-size: 0.6rem;
+  margin: 0.1rem 0;
+}
 /* Media Queries -------------------------------------------------- */
 
 @media screen and (max-width: 500px) {
@@ -260,6 +281,9 @@ button#load-game:disabled {
   .progress-square {
     width: 1.5vw;
     height: 1.5vw;
+  }
+  .modal-content {
+    margin: 0 24vw;
   }
 }
 @media screen and (min-width: 850px) {
