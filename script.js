@@ -1,4 +1,5 @@
 let nouns = [];
+let currentWordJson;
 //nouns = Array.from(new Set(nouns));
 
 //Get words from Random word api
@@ -97,7 +98,7 @@ function nextWord() {
     // Get definition from API
     const response = await fetch(baseUrl + randomWord);
     const results = await response.json();
-    console.log(results);
+    currentWordJson = results;
 
     //Catch error if no definition is found
     if (results.title === "No Definitions Found") {
@@ -106,6 +107,8 @@ function nextWord() {
       getDefinition();
       return;
     }
+
+    populateModal(currentWordJson);
 
     // Get dictionary form of word
     const sourceUrls = results[0].sourceUrls;
@@ -263,44 +266,35 @@ function getChoiceButtons() {
           choiceButtons[j].classList.contains("correct-answer") === false
         ) {
           choiceButtons[j].classList.add("incorrect-hide");
-        } else {
-          const lookUp = document.createElement("span");
-          lookUp.classList.add("look-up");
-          lookUp.innerText = "📖";
-          choiceButtons[j].appendChild(lookUp);
         }
       }
 
+      // Add look-up button to correct answer
+      const correctAnswerDiv = document.querySelector(".correct-answer");
+      const lookUpBtn = document.createElement("button");
+      lookUpBtn.innerText = "?";
+      lookUpBtn.classList.add("look-up");
+      correctAnswerDiv.appendChild(lookUpBtn);
+
       // Make look-up button clickable
-      const lookUps = document.querySelectorAll(".look-up");
-      console.log(lookUps);
-      for (let i = 0; i < lookUps.length; i++) {
-        lookUps[i].addEventListener("click", (event) => {
-          const clickedAnswer = event.target.parentNode.firstChild.textContent
-            .trim()
-            .replace(/\s+/g, " ");
-          console.log("Clicked answer: " + clickedAnswer);
-          // Open modal
-          var modal = document.getElementById("myModal");
+      const lookUp = document.querySelector(".look-up");
+      lookUp.addEventListener("click", (event) => {
+        const clickedAnswer = event.target.parentNode.firstChild.textContent
+          .trim()
+          .replace(/\s+/g, " ");
+        console.log("Clicked answer: " + clickedAnswer);
+        // Open modal
+        const modal = document.querySelector("#myModal");
 
-          // Get the <span> element that closes the modal
-          var span = document.getElementsByClassName("close")[0];
-
-          modal.style.display = "block";
-
-          // When the user clicks on <span> (x), close the modal
-          span.onclick = function () {
+        modal.style.display = "block";
+        // When the user clicks anywhere outside of the modal, close it
+        window.addEventListener("click", (event) => {
+          if (event.target == modal) {
             modal.style.display = "none";
-          };
-
-          // When the user clicks anywhere outside of the modal, close it
-          window.onclick = function (event) {
-            if (event.target == modal) {
-              modal.style.display = "none";
-            }
-          };
+          }
         });
-      }
+      });
+
       // End game and reset word count at 10
       if (wordCount === 10) {
         alert("Game over!");
@@ -334,4 +328,67 @@ function makeProgress(myBool) {
   } else {
     progressSquares[wordCount - 1].classList.add("incorrect");
   }
+}
+
+function populateModal(myWord) {
+  // Get the modal
+  const modal = document.querySelector("#myModal");
+
+  // Remove previous modal content
+  const modalContent = document.querySelector(".modal-content");
+  modalContent.innerHTML = "";
+
+  // Get the <span> element that closes the modal
+  const span = document.querySelector(".close");
+  // // Create a <span> element and add the class "close" to it
+  // const span = document.createElement("span");
+  // span.classList.add("close");
+  // span.innerHTML = "&times;";
+  // modalContent.appendChild(span);
+
+  // When the user clicks on <span> (x), close the modal
+  span.addEventListener("click", (event) => {
+    modal.style.display = "none";
+  });
+
+  // Get word from myWord
+  const word = myWord[0].word;
+  console.log("Word: " + word);
+
+  // Print word and phonetic to modal
+  const wordDiv = document.createElement("div");
+  wordDiv.classList.add("word-div");
+  wordDiv.innerHTML = word;
+  modalContent.appendChild(wordDiv);
+
+  // Get meanings from myWord
+  const meanings = myWord[0].meanings;
+  console.log(meanings);
+
+  // Loop through meanings array and create divs for each meaning
+  // for (let i = 0; i < meanings.length; i++) {
+  //   const meaningDiv = document.createElement("div");
+  //   meaningDiv.classList.add("meaning-div");
+  //   modalContent.appendChild(meaningDiv);
+
+  //   // Get part of speech from meanings
+  //   const partOfSpeech = meanings[i].partOfSpeech;
+  //   console.log("Part of speech: " + partOfSpeech);
+  //   // Print part of speech to modal
+  //   const partOfSpeechDiv = document.createElement("div");
+  //   partOfSpeechDiv.classList.add("part-of-speech-div");
+  //   partOfSpeechDiv.innerHTML = partOfSpeech;
+  //   meaningDiv.appendChild(partOfSpeechDiv);
+
+  //   // Get definitions from meanings
+  //   const definitions = meanings[i].definition;
+  //   console.log(definitions);
+  //   // Print definitions to modal
+  //   for (let j = 0; j < definitions.length; j++) {
+  //     // const definitionDiv = document.createElement("div");
+  //     // definitionDiv.classList.add("definition-div");
+  //     // definitionDiv.innerHTML = definitions[j].definition;
+  //     // meaningDiv.appendChild(definitionDiv);
+  //   }
+  // }
 }

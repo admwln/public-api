@@ -124,6 +124,7 @@ button#load-game:disabled {
 #choices .choice.incorrect-clicked {
   background-color: var(--red);
   cursor: default;
+  opacity: 0.5;
 }
 
 #choices .choice.correct-reveal {
@@ -137,10 +138,16 @@ button#load-game:disabled {
 }
 
 #choices .look-up {
-  font-size: 1.1rem;
-  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: bold;
   position: absolute;
   right: 0.75rem;
+  top: 0.5rem;
+  border-radius: 50%;
+  width: 1.35rem;
+  height: 1.35rem;
+  margin: 0;
+  padding: 0.25rem;
 }
 
 /* Progress -------------------------------------------------- */
@@ -226,6 +233,15 @@ button#load-game:disabled {
   cursor: pointer;
 }
 
+/* Modal Content -------------------------------------------------- */
+.meaning-div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0.5rem 0;
+  font-size: 0.5rem;
+}
+
 /* Media Queries -------------------------------------------------- */
 
 @media screen and (max-width: 500px) {
@@ -258,6 +274,6 @@ button#load-game:disabled {
   }
 
   h1 {
-    font-size: 5rem;
+    font-size: 4rem;
   }
 }
