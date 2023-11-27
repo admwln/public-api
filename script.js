@@ -48,6 +48,11 @@ let wordCount = 0;
 
 // Generate new word on click
 function nextWord() {
+  let crashCount = 0;
+
+  // Reset randomWord
+  randomWord = undefined;
+
   // Disable #next-word button until user has chosen an answer
   nextWordBtn.disabled = true;
 
@@ -56,17 +61,32 @@ function nextWord() {
   for (let j = 0; j < choiceButtons.length; j++) {
     choiceButtons[j].disabled = false;
   }
+  // Empty choice div
+  choiceContainer.innerHTML = "";
 
   // Get definition of random word from Free Dictionary API
   const getDefinition = async () => {
-    // Empty choice div
-    choiceContainer.innerHTML = "";
-    const randomIndex = Math.floor(Math.random() * nouns.length);
-    randomWord = nouns[randomIndex];
-    console.log(randomWord);
+    crashCount++;
+    if (crashCount === 10) {
+      alert("Something went wrong, please try again.");
+      return;
+    }
+    console.log("random word: " + randomWord);
 
-    // Remove random word from nouns array (at position randomIndex, remove one item)
-    nouns.splice(randomIndex, 1);
+    if (randomWord === undefined) {
+      //randomWord = "blue";
+      const randomIndex = Math.floor(Math.random() * nouns.length);
+      randomWord = nouns[randomIndex];
+      console.log(randomWord);
+      // Remove random word from nouns array (at position randomIndex, remove one item)
+      nouns.splice(randomIndex, 1);
+    }
+
+    if (randomWord === undefined) {
+      console.log("random word is undefined, will die");
+
+      return;
+    }
 
     // If randomWord ends with 'sses', remove 'es'
     if (randomWord.slice(-4) === "sses") {
@@ -104,6 +124,8 @@ function nextWord() {
     //Catch error if no definition is found
     if (results.title === "No Definitions Found") {
       console.log("No definition found, re-calling function");
+      // Unset randomWord
+      randomWord = undefined;
       // Recursive call to the function
       getDefinition();
       return;
@@ -175,6 +197,8 @@ function nextWord() {
     ) {
       console.log("Flagged definition: '" + definition + "'");
       console.log("Definition includes beginning of word, re-calling function");
+      // Unset randomWord
+      randomWord = undefined;
       // Recursive call to the function
       getDefinition();
       return;
