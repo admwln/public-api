@@ -130,6 +130,7 @@ function nextWord() {
       randomWord = dictionaryForm;
 
       // Recursive call to the function
+      // !!! getDefinition() also gets a whole new radom word.
       getDefinition();
       return;
     }
