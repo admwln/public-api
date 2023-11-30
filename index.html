@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <!-- <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/water.css@2/out/water.css'> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Karla:wght@500;800&display=swap" rel="stylesheet">
     <title>Definitely</title>
 </head>
 
@@ -14,14 +16,20 @@
         <a href="index.html">
             <h1>Definitely</h1>
         </a>
+        <div class="result hidden">
+            <h2>Well done!</h2>
+            <p>
+                You socred <span id="correct">0</span> out of 10
+            </p>
+        </div>
         <div class="init">
             <button id="load-game">Load new game</button>
-            <div class="difficulty-container">
-                <label for="difficulty">Difficulty</label>
-                <select name="difficulty" id="difficulty">
-                    <option selected value="4">Piece of Cake</option>
-                    <option value="7">Let's Rock</option>
-                    <option value="10">Come Get Some</option>
+            <div class="word-length-container">
+                <label for="word-length">Word length</label>
+                <select name="word-length" id="word-length">
+                    <option selected value="4">Shorter words</option>
+                    <option value="7">Medium words</option>
+                    <option value="10">Longer words</option>
                 </select>
             </div>
         </div>

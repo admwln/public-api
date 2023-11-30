@@ -1,5 +1,6 @@
 let nouns = [];
 let currentWordJson;
+let correctCounter;
 //nouns = Array.from(new Set(nouns));
 
 //Get words from Random word api
@@ -12,6 +13,9 @@ loadGameBtn.addEventListener("click", () => {
   const loadGameBtn = document.querySelector("#load-game");
   loadGameBtn.disabled = true;
 
+  // Reset correctCounter
+  correctCounter = 0;
+
   // Hide init container
   const initContainer = document.querySelector(".init");
   initContainer.classList.add("hidden");
@@ -20,7 +24,7 @@ loadGameBtn.addEventListener("click", () => {
   const gameContainer = document.querySelector(".game-container");
   gameContainer.classList.remove("hidden");
 
-  const wordLength = document.querySelector("#difficulty").value;
+  const wordLength = document.querySelector("#word-length").value;
   const getWords = async () => {
     const response = await fetch(
       randomWordUrl + "&number=100&length=" + wordLength
@@ -281,7 +285,7 @@ function getChoiceButtons() {
         console.log("Correct!");
         wordCount++;
         console.log("Word count: " + wordCount);
-
+        correctCounter++;
         makeProgress(true);
       } else {
         console.log("Incorrect!");
@@ -334,14 +338,39 @@ function getChoiceButtons() {
 
       // End game and reset word count at 10
       if (wordCount === 10) {
-        alert("Game over!");
         wordCount = 0;
         console.log("Word count: " + wordCount);
-        // Disable #next-word button at end of game
-        nextWordBtn.disabled = true;
+        console.log("Game over!");
+        // Hide #next-word button at end of game
+        nextWordBtn.classList.add("hidden");
+        // Create result button and add to beginning of game container
+        const resultBtn = document.createElement("button");
+        resultBtn.innerText = "Result";
+        resultBtn.id = "result-btn";
+        const gameContainer = document.querySelector(".game-container");
+        gameContainer.prepend(resultBtn);
+
+        // Make result button clickable
+        const resultButton = document.querySelector("#result-btn");
+        resultButton.addEventListener("click", (event) => {
+          displayResult();
+        });
+      }
+
+      // Display result at end of game
+      function displayResult() {
+        // Hide game container at end of game
+        const gameContainer = document.querySelector(".game-container");
+        gameContainer.classList.add("hidden");
         // Enable #load-game button at end of game
         const loadGameBtn = document.querySelector("#load-game");
         loadGameBtn.disabled = false;
+        // Display result containter at end of game
+        const resultContainer = document.querySelector(".result");
+        resultContainer.classList.remove("hidden");
+        // Print correct count to result container
+        const correctSpan = document.querySelector("#correct");
+        correctSpan.innerText = correctCounter;
         // Display init container at end of game
         const initContainer = document.querySelector(".init");
         initContainer.classList.remove("hidden");
