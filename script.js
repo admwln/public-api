@@ -16,6 +16,22 @@ loadGameBtn.addEventListener("click", () => {
   // Reset correctCounter
   correctCounter = 0;
 
+  // Hide result container
+  const resultContainer = document.querySelector(".result");
+  resultContainer.classList.add("hidden");
+
+  // If there is a result button, remove it
+  const resultBtn = document.querySelector("#result-btn");
+  if (resultBtn) {
+    resultBtn.remove();
+  }
+
+  // Show #next-word button
+  const nextWordBtn = document.querySelector("#next-word");
+  nextWordBtn.classList.remove("hidden");
+  // Disable #next-word button until user has chosen an answer
+  nextWordBtn.disabled = true;
+
   // Hide init container
   const initContainer = document.querySelector(".init");
   initContainer.classList.add("hidden");
