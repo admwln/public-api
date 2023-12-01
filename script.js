@@ -87,7 +87,7 @@ function nextWord() {
   // Get definition of random word from Free Dictionary API
   const getDefinition = async () => {
     crashCount++;
-    if (crashCount === 10) {
+    if (crashCount === 100) {
       alert("Something went wrong, please try again.");
       return;
     }
@@ -136,9 +136,16 @@ function nextWord() {
       console.log("Random word ends with 'ted', removing 'd'");
     }
 
+    // If random word ends with 'ly', remove 'ly'
+    if (randomWord.slice(-2) === "ly") {
+      randomWord = randomWord.slice(0, -2);
+      console.log("Random word ends with 'ly', removing 'ly'");
+    }
+
     // Get definition from API
     const response = await fetch(baseUrl + randomWord);
     const results = await response.json();
+
     currentWordJson = results;
 
     //Catch error if no definition is found
