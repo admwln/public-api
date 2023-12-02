@@ -385,6 +385,15 @@ function getChoiceButtons() {
         // Hide game container at end of game
         const gameContainer = document.querySelector(".game-container");
         gameContainer.classList.add("hidden");
+        // Delete choice buttons at end of game
+        const choiceButtons = document.querySelectorAll(".choice");
+        for (let j = 0; j < choiceButtons.length; j++) {
+          choiceButtons[j].remove();
+        }
+        // Delete definition at end of game
+        const definitionDiv = document.querySelector("#definition");
+        definitionDiv.innerHTML = "";
+
         // Enable #load-game button at end of game
         const loadGameBtn = document.querySelector("#load-game");
         loadGameBtn.disabled = false;

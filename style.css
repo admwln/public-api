@@ -97,7 +97,7 @@ h2 {
 
 #choices button {
   background-color: var(--black);
-  transition: opacity 250ms ease-in;
+  transition: opacity 150ms ease-out;
   position: relative;
 }
 button {
@@ -167,7 +167,34 @@ button#load-game:disabled {
 #choices .choice.incorrect-clicked {
   background-color: var(--red);
   cursor: default;
-  opacity: 0.25;
+
+  animation: shaking 250ms forwards;
+}
+
+@keyframes shaking {
+  0% {
+    transform: translateX(-5px);
+  }
+  20% {
+    transform: translateX(5px);
+  }
+  50% {
+    transform: translateX(-5px);
+  }
+  70% {
+    transform: translateX(5px);
+  }
+  80% {
+    transform: translateX(-5px);
+  }
+  90% {
+    transform: translateX(5px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 0.25;
+  }
 }
 
 #choices .choice.correct-reveal {
