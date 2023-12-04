@@ -42,7 +42,7 @@ h1 {
 
 h2 {
   font-family: "Karla", sans-serif;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 800;
   margin: 0;
   padding: 0;
@@ -348,6 +348,9 @@ button#load-game:disabled {
   }
   .modal-content {
     margin: 2vw 24vw;
+  }
+  h2 {
+    font-size: 2rem;
   }
 }
 @media screen and (min-width: 800px) {

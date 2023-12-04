@@ -1,13 +1,10 @@
-let nouns = [];
-let currentWordJson;
+let words = [];
 let correctCounter;
-//nouns = Array.from(new Set(nouns));
-
-//Get words from Random word api
-// https://random-word-api.herokuapp.com/word?number=1&lang=en&length=6
+//words = Array.from(new Set(words));
 const loadGameBtn = document.querySelector("#load-game");
-const randomWordUrl = "https://random-word-api.herokuapp.com/word?lang=en";
-//Get words on click
+const currentWordUrl = "https://random-word-api.herokuapp.com/word?lang=en";
+
+// Click #load-game button
 loadGameBtn.addEventListener("click", () => {
   // Disable #load-game button until game is over
   const loadGameBtn = document.querySelector("#load-game");
@@ -40,14 +37,17 @@ loadGameBtn.addEventListener("click", () => {
   const gameContainer = document.querySelector(".game-container");
   gameContainer.classList.remove("hidden");
 
+  // Get word length from input
   const wordLength = document.querySelector("#word-length").value;
+
+  // Fetch 100 words from API
   const getWords = async () => {
     const response = await fetch(
-      randomWordUrl + "&number=100&length=" + wordLength
+      currentWordUrl + "&number=100&length=" + wordLength
     );
     const results = await response.json();
-    nouns = results;
-    console.log(nouns);
+    words = results;
+    console.log(words);
     nextWord();
   };
   getWords();
@@ -63,15 +63,17 @@ loadGameBtn.addEventListener("click", () => {
 const nextWordBtn = document.querySelector("#next-word");
 const baseUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 const choiceContainer = document.querySelector("#choices");
-let randomWord;
+let currentWord;
+let currentWordJson;
 let wordCount = 0;
 
 // Generate new word on click
 function nextWord() {
+  // Crash counter to prevent infinite loop
   let crashCount = 0;
 
-  // Reset randomWord
-  randomWord = undefined;
+  // Reset currentWord
+  currentWord = undefined;
 
   // Disable #next-word button until user has chosen an answer
   nextWordBtn.disabled = true;
@@ -91,59 +93,28 @@ function nextWord() {
       alert("Something went wrong, please try again.");
       return;
     }
-    console.log("random word: " + randomWord);
+    console.log("Current word: " + currentWord);
 
-    if (randomWord === undefined) {
-      //randomWord = "blue";
-      const randomIndex = Math.floor(Math.random() * nouns.length);
-      randomWord = nouns[randomIndex];
-      console.log(randomWord);
-      // Remove random word from nouns array (at position randomIndex, remove one item)
-      nouns.splice(randomIndex, 1);
+    // If currentWord is undefined, get a new random word from words array
+    if (currentWord === undefined) {
+      const randomIndex = Math.floor(Math.random() * words.length);
+      currentWord = words[randomIndex];
+      console.log("Current word: " + currentWord);
+      // Remove currentWord from words array (at position randomIndex, remove one item)
+      words.splice(randomIndex, 1);
     }
 
-    if (randomWord === undefined) {
+    // If currentWord is still undefined, die
+    if (currentWord === undefined) {
       console.log("random word is undefined, will die");
-
       return;
     }
 
-    // If randomWord ends with 'sses', remove 'es'
-    if (randomWord.slice(-4) === "sses") {
-      randomWord = randomWord.slice(0, -2);
-      console.log("Random word ends with 'sses', removing 'es'");
-    }
+    // Pass currentWord to function that cleans it up
+    currentWord = cleanUpWord(currentWord);
 
-    // If randomWord ends with 's', but not 'ss' or 'ous' or 'snes'...
-    if (
-      randomWord.slice(-1) === "s" &&
-      randomWord.slice(-2) !== "ss" &&
-      randomWord.slice(-2) !== "us" &&
-      randomWord.slice(-3) !== "ous" &&
-      randomWord.slice(-4) !== "snes"
-    ) {
-      // ... remove 's'
-      randomWord = randomWord.slice(0, -1);
-      console.log("Random word ends with 's', removing 's'");
-    }
-
-    // If randomWord ends with 'ed', remove 'ed'
-    if (randomWord.slice(-2) === "ed" && randomWord.slice(-3) !== "ted") {
-      randomWord = randomWord.slice(0, -2);
-      console.log("Random word ends with 'ed', removing 'ed'");
-    } else if (randomWord.slice(-3) === "ted") {
-      randomWord = randomWord.slice(0, -1);
-      console.log("Random word ends with 'ted', removing 'd'");
-    }
-
-    // If random word ends with 'ly', remove 'ly'
-    if (randomWord.slice(-2) === "ly") {
-      randomWord = randomWord.slice(0, -2);
-      console.log("Random word ends with 'ly', removing 'ly'");
-    }
-
-    // Get definition from API
-    const response = await fetch(baseUrl + randomWord);
+    // Get definition from Free Dictionary API
+    const response = await fetch(baseUrl + currentWord);
     const results = await response.json();
 
     currentWordJson = results;
@@ -151,35 +122,30 @@ function nextWord() {
     //Catch error if no definition is found
     if (results.title === "No Definitions Found") {
       console.log("No definition found, re-calling function");
-      // Unset randomWord
-      randomWord = undefined;
+      // Unset currentWord
+      currentWord = undefined;
       // Recursive call to the function
       getDefinition();
       return;
     }
 
-    // Get dictionary form of word
+    // To get dictionary form of word,
+    // compare strings in sourceUrls array and find the shortest one
     const sourceUrls = results[0].sourceUrls;
-    // console.log("source urls: " + sourceUrls);
-    // Compare strings in sourceUrls array to find the shortest one
     let shortestUrl = sourceUrls.reduce((a, b) =>
       a.length <= b.length ? a : b
     );
-
-    // // Get dictionary form by splitting url of last item in array
-    // let lastUrl = sourceUrls[sourceUrls.length - 1];
-
+    // Extract last word from url to get dictionary form
     let dictionaryForm = shortestUrl.split("/");
     dictionaryForm = dictionaryForm[dictionaryForm.length - 1];
     console.log("Dictionary form: " + dictionaryForm);
-    // Check if current randomWord is not the same as dictionaryForm
-    if (randomWord !== dictionaryForm) {
+    // Check if current currentWord is not the same as dictionaryForm
+    if (currentWord !== dictionaryForm) {
       console.log("Random word is not the same as dictionary form");
-      // Change randomWord to dictionaryForm
-      randomWord = dictionaryForm;
+      // Change currentWord to dictionaryForm
+      currentWord = dictionaryForm;
 
       // Recursive call to the function
-      // !!! getDefinition() also gets a whole new radom word.
       getDefinition();
       return;
     }
@@ -190,91 +156,22 @@ function nextWord() {
     // Save first definition to variable and display
     let definition = definitions[0].definitions[0].definition;
 
-    // Save first 3 characters of randomWord to variable
-    let beginningOfWord;
-    if (randomWord.length > 3) {
-      beginningOfWord = randomWord.slice(
-        0,
-        Math.round(3 + randomWord.length * 0.1)
-      );
-      console.log("Beginning of word: " + beginningOfWord);
-      // If current word is 4 characters or less, use the whole word
-    } else {
-      beginningOfWord = randomWord;
-      console.log("Beginning of word: " + beginningOfWord);
-    }
-
-    // Save last 4 characters of randomWord to variable
-    let endOfWord;
-    if (randomWord.length > 3) {
-      endOfWord = randomWord.slice(-Math.round(3 + randomWord.length * 0.1));
-      console.log("End of word: " + endOfWord);
-      // If current word is 4 characters or less, use the whole word
-    } else {
-      endOfWord = randomWord;
-      console.log("End of word: " + endOfWord);
-    }
-
-    // Make definition lowercase
-    let definitionLower = definition.toLowerCase();
-
-    if (
-      definitionLower.includes(beginningOfWord) ||
-      definitionLower.includes(endOfWord)
-    ) {
-      console.log("Flagged definition: '" + definition + "'");
-      console.log("Definition includes beginning of word, re-calling function");
-      // Unset randomWord
-      randomWord = undefined;
+    // If definition includes beginning or end of word, re-call function
+    const defCheck = checkDefinition(currentWord, definition);
+    if (defCheck) {
+      // Unset currentWord
+      currentWord = undefined;
       // Recursive call to the function
       getDefinition();
       return;
     }
 
-    // Remove previous definition-div
-    const definitionDivs = document.querySelectorAll(".definition-div");
-    for (let i = 0; i < definitionDivs.length; i++) {
-      definitionDivs[i].remove();
-    }
-
-    // Display definition in html
-    const definitionDiv = document.createElement("div");
-    definitionDiv.classList.add("definition-div");
-    definitionDiv.innerHTML = definition;
-
-    const definitionDisplay = document.querySelector("#definition");
-    definitionDisplay.appendChild(definitionDiv);
-
-    // Generate array with four words, including our current randomWord
-    let multipleChoices = [];
-    // Push current randomWord to array
-    multipleChoices.push(randomWord);
-    // Shuffle noun array
-    shuffleArray(nouns);
-    // Add first 3 strings to multipleChoices array
-    for (let i = 0; i < 3; i++) {
-      multipleChoices.push(nouns[i]);
-    }
-    // Shuffle multipleChoices
-    shuffleArray(multipleChoices);
-
-    // Display multipleChoices in html
-    for (let i = 0; i < multipleChoices.length; i++) {
-      const choiceBtn = document.createElement("button");
-      choiceBtn.classList.add("choice");
-      choiceBtn.innerText = multipleChoices[i];
-      choiceContainer.appendChild(choiceBtn);
-      // Flag correct answer
-      if (multipleChoices[i] === randomWord) {
-        choiceBtn.classList.add("correct-answer");
-      }
-    }
-
-    getChoiceButtons();
+    displayDefinitionAndChoices(currentWord, definition);
   };
   getDefinition();
 }
 
+// Call nextWord() when #next-word button is clicked
 nextWordBtn.addEventListener("click", () => {
   nextWord();
 });
@@ -288,6 +185,125 @@ function shuffleArray(array) {
     array[currentIndex] = array[randIndex];
     array[randIndex] = temp;
   }
+}
+
+// Clean up word
+function cleanUpWord(word) {
+  // Pass currentWord through a series of checks to make sure it's a viable word
+  // If currentWord ends with 'sses', remove 'es'
+  if (word.slice(-4) === "sses") {
+    word = word.slice(0, -2);
+    console.log("Word ends with 'sses', removing 'es'");
+  }
+
+  // If word ends with 's', but not 'ss' or 'ous' or 'snes'...
+  if (
+    word.slice(-1) === "s" &&
+    word.slice(-2) !== "ss" &&
+    word.slice(-2) !== "us" &&
+    word.slice(-3) !== "ous" &&
+    word.slice(-4) !== "snes"
+  ) {
+    // ... remove 's'
+    word = word.slice(0, -1);
+    console.log("Word ends with 's', removing 's'");
+  }
+
+  // If word ends with 'ed', remove 'ed'
+  if (word.slice(-2) === "ed" && word.slice(-3) !== "ted") {
+    word = word.slice(0, -2);
+    console.log("Word ends with 'ed', removing 'ed'");
+  } else if (word.slice(-3) === "ted") {
+    word = word.slice(0, -1);
+    console.log("Word ends with 'ted', removing 'd'");
+  }
+
+  // If Word ends with 'ly', remove 'ly'
+  if (word.slice(-2) === "ly") {
+    word = word.slice(0, -2);
+    console.log("Word ends with 'ly', removing 'ly'");
+  }
+
+  return word;
+}
+
+function checkDefinition(word, definition) {
+  // Save first 3 characters (plus 10% of current word length) of word to variable
+  let beginningOfWord;
+  if (word.length > 3) {
+    beginningOfWord = word.slice(0, Math.round(3 + word.length * 0.1));
+    console.log("Beginning of word: " + beginningOfWord);
+    // If current word is 4 characters or less, use the whole word
+  } else {
+    beginningOfWord = word;
+    console.log("Beginning of word: " + beginningOfWord);
+  }
+
+  // Save last 3 characters (plus 10% of current word length) of word to variable
+  let endOfWord;
+  if (word.length > 3) {
+    endOfWord = word.slice(-Math.round(3 + word.length * 0.1));
+    console.log("End of word: " + endOfWord);
+    // If current word is 4 characters or less, use the whole word
+  } else {
+    endOfWord = word;
+    console.log("End of word: " + endOfWord);
+  }
+
+  // Make definition lowercase
+  const definitionLower = definition.toLowerCase();
+
+  // Check if definition includes beginning or end of word
+  if (
+    definitionLower.includes(beginningOfWord) ||
+    definitionLower.includes(endOfWord)
+  ) {
+    console.log("Flagged definition: '" + definition + "'");
+    console.log("Definition includes beginning of word");
+    return true;
+  }
+}
+
+function displayDefinitionAndChoices(word, definition) {
+  // Remove previous definition-div
+  const definitionDivs = document.querySelectorAll(".definition-div");
+  for (let i = 0; i < definitionDivs.length; i++) {
+    definitionDivs[i].remove();
+  }
+
+  // Display definition in html
+  const definitionDiv = document.createElement("div");
+  definitionDiv.classList.add("definition-div");
+  definitionDiv.innerHTML = definition;
+
+  const definitionDisplay = document.querySelector("#definition");
+  definitionDisplay.appendChild(definitionDiv);
+
+  // Generate array with four words, including our current currentWord
+  let multipleChoices = [];
+  // Push current currentWord to array
+  multipleChoices.push(word);
+  // Shuffle words array
+  shuffleArray(words);
+  // Add first 3 strings to multipleChoices array
+  for (let i = 0; i < 3; i++) {
+    multipleChoices.push(words[i]);
+  }
+  // Shuffle multipleChoices
+  shuffleArray(multipleChoices);
+
+  // Display multipleChoices in html
+  for (let i = 0; i < multipleChoices.length; i++) {
+    const choiceBtn = document.createElement("button");
+    choiceBtn.classList.add("choice");
+    choiceBtn.innerText = multipleChoices[i];
+    choiceContainer.appendChild(choiceBtn);
+    // Flag correct answer
+    if (multipleChoices[i] === currentWord) {
+      choiceBtn.classList.add("correct-answer");
+    }
+  }
+  getChoiceButtons();
 }
 
 // Get all multiple choice buttons and make them clickable
@@ -304,7 +320,7 @@ function getChoiceButtons() {
         .trim()
         .replace(/\s+/g, " ");
       // Compare chosen answer with current word
-      if (randomWord === clickedAnswerText) {
+      if (currentWord === clickedAnswerText) {
         console.log("Correct!");
         wordCount++;
         console.log("Word count: " + wordCount);
@@ -400,6 +416,20 @@ function getChoiceButtons() {
         // Display result containter at end of game
         const resultContainer = document.querySelector(".result");
         resultContainer.classList.remove("hidden");
+        // Change result h2 depending on score
+        const resultHeading = document.querySelector(".result > h2");
+        if (correctCounter === 10) {
+          resultHeading.innerText = "Flawless!";
+        } else if (correctCounter >= 8) {
+          resultHeading.innerText = "Almost amazing!";
+        } else if (correctCounter >= 4) {
+          resultHeading.innerText = "Golf clap!";
+        } else if (correctCounter >= 2) {
+          resultHeading.innerText = "Just warming up?";
+        } else {
+          resultHeading.innerText = "Ouch!";
+        }
+
         // Print correct count to result container
         const correctSpan = document.querySelector("#correct");
         correctSpan.innerText = correctCounter;
