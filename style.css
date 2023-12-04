@@ -4,6 +4,7 @@
   --gray-transparent: #7f7e7cbf;
   --green: #a0b10d;
   --red: #ff4b09;
+  --redder: rgb(255, 0, 0);
   --white: #f2edd0;
   --yellow: #fddd00;
   font-size: 24px;
@@ -174,12 +175,15 @@ button#load-game:disabled {
 @keyframes shaking {
   0% {
     transform: translateX(-5px);
+    background-color: var(--red);
   }
   20% {
     transform: translateX(5px);
+    background-color: var(--redder);
   }
   50% {
     transform: translateX(-5px);
+    background-color: var(--red);
   }
   70% {
     transform: translateX(5px);
